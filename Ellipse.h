@@ -11,7 +11,7 @@ class Ellipse{
 private:
 	list<Ellipse_coordinate> ellipse_position;
 public:
-	void bresenham_ellipse(int x0, int y0);
+	void bresenham_ellipse(int x0, int y0,int a,int b);
 };
 
 #endif

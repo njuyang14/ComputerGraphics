@@ -3,56 +3,56 @@
 #include<math.h>
 void setPixel(int x, int y);
 
-void Ellipse::bresenham_ellipse(int x0, int y0)
+void Ellipse::bresenham_ellipse(int x0, int y0,int a,int b)
 {
-	int a, b;
-	//cout << "Please input rx and ry: ";
-	//cin >> a;
-	//cin >> b;
-	a = 100;
-	b = 70;
+	cout << "Please input rx and ry: ";
+	cin >> a >> b;
+	//a = 100;
+	//b = 70;
 
 	glBegin(GL_POINTS);
 	GLfloat x = 0, y = b;
-	GLfloat p0 = b ^ 2 - a^a^b - a ^ 2 / 4;
+	GLfloat p0 = b * b - a*a*b + a * a / 4;
+	glVertex2f(x0 + x, y0 + y);
+	glVertex2f(x0 + x, y0 - y);
 	while (a*a*y > b*b*x)
 	{
+		x++;
 		if (p0 < 0)
 		{
-			p0 = p0 + 2 * b*b*x + 3*b*b;
+			p0 = p0 + 2 * b*b*x + b*b;
 		}
 		else
 		{
-			p0 = p0 + 2 * b*b*x - 2 * a*a*y + 3*b*b + 2 * a*a;
 			y--;
+			p0 = p0 + 2 * b*b*x - 2 * a*a*y + b*b;
 		}
-		x++;
-		setPixel(x0 + x, y0 + y);
-		setPixel(x0 + x, y0 - y);
-		setPixel(x0 - x, y0 + y);
-		setPixel(x0 - x, y0 - y);
+
+		glVertex2f(x0 + x, y0 + y);
+		glVertex2f(x0 + x, y0 - y);
+		glVertex2f(x0 - x, y0 + y);
+		glVertex2f(x0 - x, y0 - y);
 	}
 
-	p0 = b*b*(x + 1 / 2)*(x + 1 / 2) + a*a*(y - 1) - a*a*b*b;
+	p0 = b*b*(x + 0.5)*(x + 0.5) + a*a*(y - 1)*(y-1) - a*a*b*b;//(y-1)*(y-1)?
 	while (y > 0)
 	{
+		y--;
 		if (p0 > 0)
 		{
-			p0 = p0 - 2 * a*a*y + 3 * a*a;
+			p0 = p0 - 2 * a*a*y + a*a;
 		}
 		else
 		{
-			p0 = p0 + 2 * b * b * x - 2 * y*a*a + 2 * b*b + 3 * a*a;
 			x++;
+			p0 = p0 + 2 * b * b * x - 2 * y*a*a + a*a;
 		}
-		y--;
 
-		setPixel(x0 + x, y0 + y);
-		setPixel(x0 + x, y0 - y);
-		setPixel(x0 - x, y0 + y);
-		setPixel(x0 - x, y0 - y);
+		glVertex2f(x0 + x, y0 + y);
+		glVertex2f(x0 + x, y0 - y);
+		glVertex2f(x0 - x, y0 + y);
+		glVertex2f(x0 - x, y0 - y);
 	}
 	glEnd();
 	glFlush();
-	cout << "draw end" << endl;
 }

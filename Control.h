@@ -6,6 +6,7 @@
 #include"Circle.h"
 #include"Ellipse.h"
 
+
 class Control{
 public:
 	list<Line> all_line;
