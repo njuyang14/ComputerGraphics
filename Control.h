@@ -3,11 +3,14 @@
 
 #include<list>
 #include"Line.h"
-
+#include"Circle.h"
+#include"Ellipse.h"
 
 class Control{
 public:
 	list<Line> all_line;
+	list<Circle> all_circle;
+	list<Ellipse> all_ellipse;
 };
 
 

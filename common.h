@@ -7,6 +7,7 @@ using namespace std;
 
 #define LINE 'q'
 #define CIRCLE 'w'
+#define ELLIPSE 'e'
 
 void setPixel(int x, int y);//draw a pixel. (implement in basicOperation.cpp)
 
