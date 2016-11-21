@@ -5,10 +5,15 @@ void setPixel(int x, int y);
 
 void Ellipse::bresenham_ellipse(int x0, int y0,int a,int b)
 {
-	cout << "Please input rx and ry: ";
-	cin >> a >> b;
-	//a = 100;
-	//b = 70;
+	//cout << "Please input rx and ry: ";
+	//cin >> a >> b;
+	a = 100;
+	b = 70;
+
+	start = x0;
+	end = y0;
+	rx = a;
+	ry = b;
 
 	glBegin(GL_POINTS);
 	GLfloat x = 0, y = b;
@@ -55,4 +60,10 @@ void Ellipse::bresenham_ellipse(int x0, int y0,int a,int b)
 	}
 	glEnd();
 	glFlush();
+}
+
+void Ellipse::erase_ellipse()
+{
+	glColor3f(1,1,1);
+	bresenham_ellipse(start,end,rx,ry);
 }

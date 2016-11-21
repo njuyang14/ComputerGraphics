@@ -5,6 +5,11 @@ void setPixel(int x, int y);
 
 void Circle::bresenham_circle(int x0, int y0, int x1, int y1)
 {
+	start0 = x0;
+	start1 = x1;
+	end0 = y0;
+	end1 = y1;
+
 	glBegin(GL_POINTS);
 	GLfloat r = sqrt(pow(abs(y1 - y0), 2) + pow(abs(x1 - x0), 2));
 	GLfloat x, y;
@@ -36,4 +41,10 @@ void Circle::bresenham_circle(int x0, int y0, int x1, int y1)
 	}
 	glEnd();
 	glFlush();
+}
+
+void Circle::erase_circle()
+{
+	glColor3f(1,1,1);
+	bresenham_circle(start0, end0, start1, end1);
 }

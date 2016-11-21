@@ -9,14 +9,7 @@ int line_click = 0;
 int circle_click = 0;
 int startx, endx, starty, endy;
 int rx, ry;
-
-/*#include<WinUser.h>
-#include<windows.h>
-
-//HWND edit = CreateWindow("EDIT", "", WS_CHILD | WS_VISIBLE, 0, 0, 100, 10, hWnd, NULL, hInstance, NULL);
-//创建编辑框，hWnd是父窗口句柄,hInstance是程序句柄 ShowWindow(edit,SW_SHOW); 
-//显示编辑框 获取文本用GetWindowText();
-*/
+//椭圆长轴短轴
 
 Control myDraw;
 extern Control myDraw;
@@ -26,11 +19,24 @@ void SelectMenu(int value)
 	MENU = value;
 	line_click = 0;
 	circle_click = 0;
-	/*if (value==2)
+	if (value==1)
 	{
-		cout << "input rx,ry: ";
-		cin >> rx >> ry;
-	}*/
+		list<Line>::iterator it = myDraw.all_line.begin();
+		it->erase_line();
+		myDraw.all_line.erase(it);
+	}
+	else if (value == 3)
+	{
+		list<Circle>::iterator it = myDraw.all_circle.begin();
+		it->erase_circle();
+		myDraw.all_circle.erase(it);
+	}
+	else if (value == 5)
+	{
+		list<Ellipse>::iterator it = myDraw.all_ellipse.begin();
+		it->erase_ellipse();
+		myDraw.all_ellipse.erase(it);
+	}
 }
 
 void PressKeyboard(unsigned char key, int x, int y)
@@ -79,6 +85,7 @@ void PressMouse(int button, int state, int x, int y)
 				endy = 480 - y;
 				line_click = 0;
 
+				glColor3f(1, 0, 0);
 				/*用bresenham画出直线，并保存在Control::myDraw中*/
 				Line new_line;
 				new_line.bresenham(startx, starty, endx, endy);
@@ -87,7 +94,7 @@ void PressMouse(int button, int state, int x, int y)
 		}
 		break;
 	}
-	case 1:
+	case 2:
 	{
 		if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 		{//鼠标接收两个坐标，圆心和圆上任意一点
@@ -101,6 +108,7 @@ void PressMouse(int button, int state, int x, int y)
 				endy = 480 - y;
 				circle_click = 0;
 
+				glColor3f(1, 0, 0);
 				/*用bresenham画出圆，并保存在Control::myDraw中*/
 				Circle new_circle;
 				new_circle.bresenham_circle(startx, starty, endx, endy);
@@ -110,22 +118,23 @@ void PressMouse(int button, int state, int x, int y)
 		}
 		break;
 	}
-	case 2:
+	case 4:
 	{
 		if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 		{	
 			startx = x;
 			endy = 480 - y;
 
+			glColor3f(1, 0, 0);
 			Ellipse new_ellipse;
 			new_ellipse.bresenham_ellipse(startx, endy, rx, ry);
-			cout << "draw end" << endl;
+			myDraw.all_ellipse.push_back(new_ellipse);
 		}
 		break;
 	}
 	case 10:
 	{
-		glClear(GL_COLOR_BUFFER_BIT);
+		glClearColor(1.0, 1.0, 1.0, 0.0);
 		break;
 	}
 	default:{break; }
@@ -140,11 +149,26 @@ void myDisplay()
 	gluOrtho2D(0.0, 640.0, 0.0, 480.0);//转换坐标640*480
 	glClear(GL_COLOR_BUFFER_BIT);
 
+	int line_submenu = glutCreateMenu(SelectMenu);
+	glutAddMenuEntry("绘制",0);
+	glutAddMenuEntry("删除", 1);
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+
+	int circle_submenu = glutCreateMenu(SelectMenu);
+	glutAddMenuEntry("绘制", 2);
+	glutAddMenuEntry("删除", 3);
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+
+	int ellipse_submenu = glutCreateMenu(SelectMenu);
+	glutAddMenuEntry("绘制", 4);
+	glutAddMenuEntry("删除", 5);
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+
 	/*set menu*/
 	int menu_id = glutCreateMenu(SelectMenu);
-	glutAddMenuEntry("Draw a line", 0);
-	glutAddMenuEntry("Draw a circle", 1);
-	glutAddMenuEntry("Draw a ellipse", 2);
+	glutAddSubMenu("Draw a line", line_submenu);
+	glutAddSubMenu("Draw a circle", circle_submenu);
+	glutAddSubMenu("Draw a ellipse", ellipse_submenu);
 	glutAddMenuEntry("Clear screen",10);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 

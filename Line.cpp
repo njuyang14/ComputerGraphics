@@ -5,9 +5,14 @@ void setPixel(int x,int y);
 
 void Line::bresenham(int x0, int y0, int x1, int y1)
 {
+	start0 = x0;
+	start1 = x1;
+	end0 = y0;
+	end1 = y1;
+
 	double k = ((double)(y1 - y0)) / ((double)(x1 - x0));
 	Coordinate start(x0,y0);
-	line_position.push_back(start);
+	//line_position.push_back(start);
 	setPixel(x0,y0);
 
 	/*init*/
@@ -33,16 +38,16 @@ void Line::bresenham(int x0, int y0, int x1, int y1)
 				if (p0 <= 0)
 				{
 					x0++;
-					Coordinate mid(x0, y0);
-					line_position.push_back(mid);
+					//Coordinate mid(x0, y0);
+					//line_position.push_back(mid);
 
 					p0 = p0 + 2 * ty;
 				}
 				else if (p0 > 0){
 					x0++;
 					y0++;
-					Coordinate mid(x0, y0);
-					line_position.push_back(mid);
+					//Coordinate mid(x0, y0);
+					//line_position.push_back(mid);
 					p0 = p0 + 2 * ty - 2 * tx;
 				}
 				setPixel(x0, y0);
@@ -85,15 +90,15 @@ void Line::bresenham(int x0, int y0, int x1, int y1)
 				if (p0 <= 0)
 				{
 					y0++;
-					Coordinate mid(x0, y0);
-					line_position.push_back(mid);
+					//Coordinate mid(x0, y0);
+					//line_position.push_back(mid);
 					p0 = p0 + 2 * tx;
 				}
 				else if (p0 > 0){
 					y0++;
 					x0++;
-					Coordinate mid(x0, y0);
-					line_position.push_back(mid);
+					//Coordinate mid(x0, y0);
+					//line_position.push_back(mid);
 					p0 = p0 + 2 * tx - 2 * ty;
 				}
 				setPixel(x0, y0);
@@ -118,7 +123,13 @@ void Line::bresenham(int x0, int y0, int x1, int y1)
 		}
 	}
 
-	Coordinate end(x1, y1);
-	line_position.push_back(end);
+	//Coordinate end(x1, y1);
+	//line_position.push_back(end);
 	setPixel(x1,y1);
+}
+
+void Line::erase_line()
+{
+	glColor3f(1,1,1);
+	bresenham(start0,end0,start1,end1);
 }
