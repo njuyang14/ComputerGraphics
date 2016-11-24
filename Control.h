@@ -5,6 +5,7 @@
 #include"Line.h"
 #include"Circle.h"
 #include"Ellipse.h"
+#include"Polygon.h"
 
 
 class Control{
@@ -12,6 +13,7 @@ public:
 	list<Line> all_line;
 	list<Circle> all_circle;
 	list<Ellipse> all_ellipse;
+	list<Polygon> all_polygon;
 };
 
 
