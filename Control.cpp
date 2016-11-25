@@ -37,6 +37,18 @@ void SelectMenu(int value)
 		it->erase_ellipse();
 		myDraw.all_ellipse.erase(it);
 	}
+	else if (value == 6)
+	{
+		glColor3f(1, 0, 0);
+		Polygon newplg;
+		myDraw.all_polygon.push_back(newplg);
+		newplg.create();
+		newplg.initNET();
+		newplg.scanLineFill();
+	}
+	else if (value == 7)
+	{
+	}
 }
 
 void PressKeyboard(unsigned char key, int x, int y)
@@ -164,11 +176,17 @@ void myDisplay()
 	glutAddMenuEntry("…æ≥˝", 5);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
+	int polygon_submenu = glutCreateMenu(SelectMenu);
+	glutAddMenuEntry("ªÊ÷∆", 6);
+	glutAddMenuEntry("ÃÓ≥‰", 7);
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+
 	/*set menu*/
 	int menu_id = glutCreateMenu(SelectMenu);
-	glutAddSubMenu("Draw a line", line_submenu);
-	glutAddSubMenu("Draw a circle", circle_submenu);
-	glutAddSubMenu("Draw a ellipse", ellipse_submenu);
+	glutAddSubMenu("÷±œﬂ", line_submenu);
+	glutAddSubMenu("‘≤", circle_submenu);
+	glutAddSubMenu("Õ÷‘≤", ellipse_submenu);
+	glutAddSubMenu("∂‡±ﬂ–Œ", polygon_submenu);
 	glutAddMenuEntry("Clear screen",10);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 

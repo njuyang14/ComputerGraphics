@@ -11,7 +11,7 @@ void Line::bresenham(int x0, int y0, int x1, int y1)
 	end1 = y1;
 
 	/*扫描填充增量初始化*/
-	dx_scan = (x0 - x1) / (y0 - y1);
+	dx_scan = ((double)(x0 - x1)) / ((double)(y0 - y1));
 
 	double k = ((double)(y1 - y0)) / ((double)(x1 - x0));
 	Coordinate start(x0,y0);

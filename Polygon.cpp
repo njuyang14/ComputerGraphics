@@ -3,17 +3,28 @@
 #include"Polygon.h"
 #include"Coordinate.h"
 #include<math.h>
+#include<algorithm>
+#include <functional>
 void setPixel(int x,int y);
 
 void Polygon::create()
 {
 	Line l1, l2, l3, l4, l5, l6;
+	/*
 	l1.bresenham(2, 2, 2, 7);
 	l2.bresenham(2, 2, 5, 1);
 	l3.bresenham(5, 1, 10, 3);
 	l4.bresenham(10, 3, 11, 8);
 	l5.bresenham(5, 5, 11, 8);
 	l6.bresenham(2, 7, 5, 5);
+	*/
+	l1.bresenham(20, 20, 20, 70);
+	l2.bresenham(20, 20, 50, 10);
+	l3.bresenham(50, 10, 100, 30);
+	l4.bresenham(100, 30, 110, 80);
+	l5.bresenham(50, 50, 110, 80);
+	l6.bresenham(20, 70, 50, 50);
+
 	polygon_edge.push_back(l1);
 	polygon_edge.push_back(l2);
 	polygon_edge.push_back(l3);
@@ -77,10 +88,53 @@ void Polygon::initAET()
 
 }
 
+bool compByXi(EDGE &e1, EDGE &e2)
+{
+	return (e1.xi < e2.xi);
+}
+
+bool ifValid(EDGE e, int y) 
+{  //判断边是否失效
+	return (e.ymax == y);
+}
+
+void Polygon::drawLine(int y)
+{
+	int intersection = AET.size();
+	int line_num = intersection / 2;
+	for (list<EDGE>::iterator it = AET.begin(); it != AET.end();it++)
+	{
+		list<EDGE>::iterator it_2nd = it;
+		it_2nd++;
+		for (int i = it->xi; i < it_2nd->xi; i++)
+			setPixel(i, y);
+		it++;
+	}
+}
+
 void Polygon::scanLineFill()
 {
-	for (int i = ymin; i < ymax; i++)
+	for (int y = ymin; y < ymax;)
 	{
+		for (list<EDGE>::iterator it = NET[y].begin(); it != NET[y].end(); it++)
+			AET.push_back(*it);
 
+		if (y != ymin)//第一次不需要更新xi
+		{
+			for (list<EDGE>::iterator it = AET.begin(); it != AET.end(); it++)
+				it->xi += it->dx;
+		}
+		AET.sort(compByXi);
+
+		drawLine(y);//画出当前活动边表里的线段
+
+		y++;
+		//AET.remove_if(bind2nd(ptr_fun(ifValid), y));//删除无效的边y=ymax
+		for (list<EDGE>::iterator it = AET.begin(); it != AET.end();)
+		{
+			list<EDGE>::iterator it2 = it;
+			it++;
+			if (it2->ymax == y)AET.erase(it2);
+		}
 	}
 }
