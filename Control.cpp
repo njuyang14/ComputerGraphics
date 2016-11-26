@@ -37,18 +37,35 @@ void SelectMenu(int value)
 		it->erase_ellipse();
 		myDraw.all_ellipse.erase(it);
 	}
-	else if (value == 6)
+	else if (value == 6||value==16||value==15)
 	{
 		glColor3f(1, 0, 0);
 		Polygon newplg;
-		myDraw.all_polygon.push_back(newplg);
-		newplg.create();
-		newplg.initNET();
-		newplg.scanLineFill();
+		newplg.create1();	
+		myDraw.all_polygon.push_front(newplg);
 	}
 	else if (value == 7)
 	{
+		list<Polygon>::iterator it = myDraw.all_polygon.begin();
+		it->initNET();
+		it->scanLineFill();
 	}
+	else if (value == 9)//line rotate
+	{
+		//myDraw.all_line.begin()->panning();
+	}
+	else if (value == 10)//line zoom
+	{
+	}
+	else if (value == 14)//line cut
+	{
+		myDraw.all_line.begin()->cut(myDraw.cutEvent);
+	}
+	else if (value == 17)//polygon cut
+	{
+		myDraw.all_polygon.begin()->cut(myDraw.cutEvent);
+	}
+
 }
 
 void PressKeyboard(unsigned char key, int x, int y)
@@ -101,7 +118,7 @@ void PressMouse(int button, int state, int x, int y)
 				/*用bresenham画出直线，并保存在Control::myDraw中*/
 				Line new_line;
 				new_line.bresenham(startx, starty, endx, endy);
-				myDraw.all_line.push_back(new_line);
+				myDraw.all_line.push_front(new_line);
 			}
 		}
 		break;
@@ -124,7 +141,7 @@ void PressMouse(int button, int state, int x, int y)
 				/*用bresenham画出圆，并保存在Control::myDraw中*/
 				Circle new_circle;
 				new_circle.bresenham_circle(startx, starty, endx, endy);
-				myDraw.all_circle.push_back(new_circle);
+				myDraw.all_circle.push_front(new_circle);
 			}
 			//cout << "press left" << endl;
 		}
@@ -140,17 +157,54 @@ void PressMouse(int button, int state, int x, int y)
 			glColor3f(1, 0, 0);
 			Ellipse new_ellipse;
 			new_ellipse.bresenham_ellipse(startx, endy, rx, ry);
-			myDraw.all_ellipse.push_back(new_ellipse);
+			myDraw.all_ellipse.push_front(new_ellipse);
 		}
 		break;
 	}
-	case 10:
+	case 8:
+	{
+		if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+		{
+			startx = x;
+			endy = 480 - y;
+			myDraw.all_line.begin()->panning(startx,endy);
+		}
+	}
+	case 11:
+	{
+		if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+		{
+			startx = x;
+			endy = 480 - y;
+			myDraw.cutEvent.selectWindowSize(11, startx, endy);
+		}
+	}
+	case 12:
+	{
+		if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+		{
+			startx = x;
+			endy = 480 - y;
+			myDraw.cutEvent.selectWindowSize(12, startx, endy);
+		}
+	}
+	case 13:
+	{
+		if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+		{
+			startx = x;
+			endy = 480 - y;
+			myDraw.cutEvent.selectWindowSize(13, startx, endy);
+			myDraw.cutEvent.drawWind();
+		}
+	}
+	case 100:
 	{
 		glClearColor(1.0, 1.0, 1.0, 0.0);
 		break;
 	}
 	default:{break; }
-	}
+	}  
 }
 
 
@@ -164,6 +218,10 @@ void myDisplay()
 	int line_submenu = glutCreateMenu(SelectMenu);
 	glutAddMenuEntry("绘制",0);
 	glutAddMenuEntry("删除", 1);
+	glutAddMenuEntry("平移", 8);
+	glutAddMenuEntry("旋转", 9);
+	glutAddMenuEntry("缩放", 10);
+	glutAddMenuEntry("裁剪", 14);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 	int circle_submenu = glutCreateMenu(SelectMenu);
@@ -176,9 +234,22 @@ void myDisplay()
 	glutAddMenuEntry("删除", 5);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
+	/*polygon submenu 的子菜单  */
+	int poly_sub_submenu = glutCreateMenu(SelectMenu);
+	glutAddMenuEntry("多边形1", 6);
+	glutAddMenuEntry("多边形2", 15);
+	glutAddMenuEntry("多边形3", 16);
+
 	int polygon_submenu = glutCreateMenu(SelectMenu);
-	glutAddMenuEntry("绘制", 6);
+	glutAddSubMenu("绘制", poly_sub_submenu);
 	glutAddMenuEntry("填充", 7);
+	glutAddMenuEntry("裁剪", 17);
+	glutAttachMenu(GLUT_RIGHT_BUTTON);
+
+	int cut_submenu = glutCreateMenu(SelectMenu);
+	glutAddMenuEntry("小", 11);
+	glutAddMenuEntry("中", 12);
+	glutAddMenuEntry("大", 13);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 	/*set menu*/
@@ -187,7 +258,8 @@ void myDisplay()
 	glutAddSubMenu("圆", circle_submenu);
 	glutAddSubMenu("椭圆", ellipse_submenu);
 	glutAddSubMenu("多边形", polygon_submenu);
-	glutAddMenuEntry("Clear screen",10);
+	glutAddSubMenu("裁剪窗口", cut_submenu);
+	glutAddMenuEntry("Clear screen",100);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 
 	//glutKeyboardFunc(PressKeyboard);

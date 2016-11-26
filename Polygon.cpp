@@ -7,7 +7,7 @@
 #include <functional>
 void setPixel(int x,int y);
 
-void Polygon::create()
+void Polygon::create1()
 {
 	Line l1, l2, l3, l4, l5, l6;
 	/*
@@ -18,12 +18,12 @@ void Polygon::create()
 	l5.bresenham(5, 5, 11, 8);
 	l6.bresenham(2, 7, 5, 5);
 	*/
-	l1.bresenham(20, 20, 20, 70);
-	l2.bresenham(20, 20, 50, 10);
-	l3.bresenham(50, 10, 100, 30);
-	l4.bresenham(100, 30, 110, 80);
-	l5.bresenham(50, 50, 110, 80);
-	l6.bresenham(20, 70, 50, 50);
+	l1.bresenham(220, 220, 220, 270);
+	l2.bresenham(220, 220, 250, 210);
+	l3.bresenham(250, 210, 300, 230);
+	l4.bresenham(300, 230, 310, 280);
+	l5.bresenham(250, 250, 310, 280);
+	l6.bresenham(220, 270, 250, 250);
 
 	polygon_edge.push_back(l1);
 	polygon_edge.push_back(l2);
@@ -32,8 +32,8 @@ void Polygon::create()
 	polygon_edge.push_back(l5);
 	polygon_edge.push_back(l6);
 	/*计算扫描线最低和最高，ymin和ymax*/
-	ymin = 2;
-	ymax = 7;
+	ymin = l1.line_position.begin()->y;
+	ymax = l1.line_position.begin()->y;
 	for (list<Coordinate>::iterator it = l1.line_position.begin(); it != l1.line_position.end(); it++){
 		if (it->y < ymin){ ymin = it->y; }
 		if (it->y > ymax){ ymax = it->y; }
@@ -42,19 +42,19 @@ void Polygon::create()
 		if (it->y < ymin){ ymin = it->y; }
 		if (it->y > ymax){ ymax = it->y; }
 	}
-	for (list<Coordinate>::iterator it = l2.line_position.begin(); it != l2.line_position.end(); it++){
+	for (list<Coordinate>::iterator it = l3.line_position.begin(); it != l3.line_position.end(); it++){
 		if (it->y < ymin){ ymin = it->y; }
 		if (it->y > ymax){ ymax = it->y; }
 	}
-	for (list<Coordinate>::iterator it = l2.line_position.begin(); it != l2.line_position.end(); it++){
+	for (list<Coordinate>::iterator it = l4.line_position.begin(); it != l4.line_position.end(); it++){
 		if (it->y < ymin){ ymin = it->y; }
 		if (it->y > ymax){ ymax = it->y; }
 	}
-	for (list<Coordinate>::iterator it = l2.line_position.begin(); it != l2.line_position.end(); it++){
+	for (list<Coordinate>::iterator it = l5.line_position.begin(); it != l5.line_position.end(); it++){
 		if (it->y < ymin){ ymin = it->y; }
 		if (it->y > ymax){ ymax = it->y; }
 	}
-	for (list<Coordinate>::iterator it = l2.line_position.begin(); it != l2.line_position.end(); it++){
+	for (list<Coordinate>::iterator it = l6.line_position.begin(); it != l6.line_position.end(); it++){
 		if (it->y < ymin){ ymin = it->y; }
 		if (it->y > ymax){ ymax = it->y; }
 	}
@@ -81,11 +81,6 @@ void Polygon::initNET()
 		t_NET[scan_line_no].push_back(t_edge);
 	}
 	NET = t_NET;
-}
-
-void Polygon::initAET()
-{
-
 }
 
 bool compByXi(EDGE &e1, EDGE &e2)
@@ -137,4 +132,10 @@ void Polygon::scanLineFill()
 			if (it2->ymax == y)AET.erase(it2);
 		}
 	}
+}
+
+void Polygon::cut(cutWindow&cw)
+{
+	for (list<Line>::iterator it = polygon_edge.begin(); it != polygon_edge.end(); it++)
+		it->cut(cw);
 }

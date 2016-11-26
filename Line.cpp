@@ -137,5 +137,83 @@ void Line::bresenham(int x0, int y0, int x1, int y1)
 void Line::erase_line()
 {
 	glColor3f(1,1,1);
+	line_position.clear();
 	bresenham(start0,end0,start1,end1);
+}
+
+void Line::panning(int x,int y)
+{
+	erase_line();
+	glColor3f(1,0,0);
+	line_position.clear();
+	int dx = x - (start0 + start1) / 2;
+	int dy = y - (end0 + end1) / 2;
+	bresenham(start0 + dx, end0 + dy, start1 + dx, end1 + dy);
+}
+
+void Line::zooming()
+{
+
+}
+
+void Line::cut(cutWindow &cw)
+{
+	erase_line();
+	bool done = false, draw = false;
+	while (!done)
+	{
+		int code1 = cw.getCode(start0, end0);
+		int code2 = cw.getCode(start1, end1);
+		if (!(code1|code2))//两点都在裁剪窗口内
+		{
+			done = true;
+			draw = true;
+		}
+		else
+		{
+			if ((code1&code2)!=0)//线段绝对不在区域内
+			{
+				done = true;
+			}
+			else
+			{
+				if (!code2)//让第一个点在裁剪框内
+				{//交换两点
+					int temp = start0;
+					start0 = start1;
+					start1 = temp;
+					temp = end0;
+					end0 = end1;
+					end1 = temp;
+					temp = code1;
+					code1 = code2;
+					code2 = temp;
+				}
+				double k = ((double)(end1 - end0)) / ((double)(start1 - start0));//斜率
+				//判断第二个点的位置
+				if (code2 & 0x0001) { //左侧
+					end1 += (cw.x1 - start1)*k;
+					start1 = cw.x1;
+				}
+				else if (code2 & 0x0010) { //右侧
+					end1 += (cw.x2 - start1)*k;
+					start1 = cw.x2;
+				}
+				else if (code2 & 0x0100) { //下方
+					if (start1 != start0)
+						start1 += (cw.y2 - end1) / k;
+					end1 = cw.y2;
+				}
+				else if (code2 & 0x1000) { //上方
+					if (start1 != start0)
+						start1 += (cw.y1 - end1) / k;
+					end1 = cw.y1;
+				}
+			}
+		}
+	}
+	if (draw){
+		glColor3f(0, 1, 0);
+		bresenham(start0, end0, start1, end1);
+	}
 }

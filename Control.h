@@ -6,7 +6,7 @@
 #include"Circle.h"
 #include"Ellipse.h"
 #include"Polygon.h"
-
+#include"cutWind.h"
 
 class Control{
 public:
@@ -14,6 +14,7 @@ public:
 	list<Circle> all_circle;
 	list<Ellipse> all_ellipse;
 	list<Polygon> all_polygon;
+	cutWindow cutEvent;
 };
 
 
