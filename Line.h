@@ -15,8 +15,8 @@ public:
 	list<Coordinate> line_position;
 	void bresenham(int x0,int y0,int x1,int y1);
 	void panning(int x,int y);
-	void rotating();
-	void zooming();
+	void rotating(int basex, int basey, int rotatex, int rotatey);
+	void zooming(int basex, int basey);
 	void cut(cutWindow &cw);
 	void erase_line();
 };

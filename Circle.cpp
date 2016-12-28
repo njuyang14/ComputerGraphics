@@ -48,3 +48,8 @@ void Circle::erase_circle()
 	glColor3f(1,1,1);
 	bresenham_circle(start0, end0, start1, end1);
 }
+
+void Circle::zooming(int basex, int basey)
+{
+
+}

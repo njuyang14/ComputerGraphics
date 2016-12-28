@@ -6,6 +6,7 @@ class Coordinate{
 public:
 	int x;
 	int y;
+	Coordinate(){}
 	Coordinate(int i, int j){
 		x = i;
 		y = j;

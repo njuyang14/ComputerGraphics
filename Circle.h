@@ -13,6 +13,9 @@ private:
 public:
 	void bresenham_circle(int x0, int y0, int x1, int y1);
 	void erase_circle();
+	void panning(int x, int y);
+	void rotating(int basex, int basey, int rotatex, int rotatey);
+	void zooming(int basex, int basey);
 };
 
 #endif

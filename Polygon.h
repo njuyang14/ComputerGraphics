@@ -25,7 +25,7 @@ private:
 	list<EDGE> AET;//活动边表
 public:
 	list<Line> polygon_edge;
-	friend void bresenham(int x0, int y0, int x1, int y1);//直线算法定义成友元，以便调用
+	//friend void bresenham(int x0, int y0, int x1, int y1);//直线算法定义成友元，以便调用
 	void create1();
 	void create2();
 	void create3();

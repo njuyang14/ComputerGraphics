@@ -151,11 +151,6 @@ void Line::panning(int x,int y)
 	bresenham(start0 + dx, end0 + dy, start1 + dx, end1 + dy);
 }
 
-void Line::zooming()
-{
-
-}
-
 void Line::cut(cutWindow &cw)
 {
 	erase_line();
@@ -216,4 +211,14 @@ void Line::cut(cutWindow &cw)
 		glColor3f(0, 1, 0);
 		bresenham(start0, end0, start1, end1);
 	}
+}
+
+void Line::rotating(int basex,int basey,int rotatex,int rotatey)
+{
+
+}
+
+void Line::zooming(int basex,int basey)
+{
+
 }

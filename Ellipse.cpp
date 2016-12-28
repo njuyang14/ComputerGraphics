@@ -7,8 +7,8 @@ void Ellipse::bresenham_ellipse(int x0, int y0,int a,int b)
 {
 	//cout << "Please input rx and ry: ";
 	//cin >> a >> b;
-	a = 100;
-	b = 70;
+	//a = 100;
+	//b = 70;
 
 	start = x0;
 	end = y0;
