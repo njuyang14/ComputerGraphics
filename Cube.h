@@ -9,9 +9,9 @@ using namespace std;
 #include"Line.h"
 
 struct point3d{
-	int x;
-	int y;
-	int z;
+	double x;
+	double y;
+	double z;
 };
 
 
@@ -21,10 +21,10 @@ public:
 	 1 ____________2
 	  /|                /|
 	/  |              /  |
-0/___|5______3/__ |6
-  |    /            |   /
+0/__ |5______/___|6
+  |    /          3|   /
   |  /              | /
-4|/___________|/7
+4|/__________|/ 7
 	*/
 	point3d vertex3d[8];
 	point3d vertex2d[8];
@@ -33,8 +33,10 @@ public:
 
 	Cube(){}
 	Cube(point3d v0,int edge_len);
-	point3d point3d_2d(point3d v,int axle,double rotate);//坐标转换
+	point3d point3d_2d(point3d v,int axle,double rotate);//坐标转换,ratate是旋转的角度
 	void draw_cube();
+	void rotate_cube(int q0, int q1, int q2);//旋转
+	void erase_cube();//擦除
 };
 
 #endif

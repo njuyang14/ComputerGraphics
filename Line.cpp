@@ -129,6 +129,25 @@ void Line::bresenham(int x0, int y0, int x1, int y1)
 			}
 		}
 	}
+	else
+	{
+		/*统一成由屏幕左端向右画图*/
+		if (x0 > x1){
+			int temp = x1;
+			x1 = x0;
+			x0 = temp;
+			temp = y1;
+			y1 = y0;
+			y0 = temp;
+		}
+		while (x0 < x1){
+			x0++;
+			y0+=k;
+			Coordinate mid(x0, y0);
+			line_position.push_back(mid);
+			setPixel(x0, y0);
+		}
+	}
 	Coordinate end(x1, y1);
 	line_position.push_back(end);
 	setPixel(x1,y1);

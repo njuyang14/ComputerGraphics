@@ -335,6 +335,65 @@ void PressMouse(int button, int state, int x, int y)
 		}
 		break;
 	}
+	case 24://cube
+	{
+		if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+		{
+			if (line_click == 0){
+				startx = x;
+				starty = 480 - y;
+				line_click = 1;
+			}
+			else if (line_click == 1){
+				endx = x;
+				endy = 480 - y;
+				line_click = 0;
+
+				glColor3f(1, 0, 0);
+				point3d p = { startx, starty, 0 };//cubeµÚ0¸ö¶¥µã
+				int edge_len = abs(endx - startx);
+				Cube cube(p, edge_len);
+				cube.draw_cube();
+				myDraw.all_cube.push_front(cube);
+			}
+		}
+		break;
+	}
+	case 26:
+	{
+		if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN){
+			if (line_click == 0){
+				startx = x;
+				starty = 480 - y;
+				line_click = 1;
+			}
+			else if (line_click == 1){
+				endx = x;
+				endy = 480 - y;
+				line_click = 0;
+
+				if (startx - endx > 0){
+					myDraw.all_cube.begin()->erase_cube();
+					myDraw.all_cube.begin()->rotate_cube(0,5, 0);
+				}
+				else if (startx - endx < 0){
+					myDraw.all_cube.begin()->erase_cube();
+					myDraw.all_cube.begin()->rotate_cube(0,-5, 0);
+				}
+				if (starty - endy>0){
+					myDraw.all_cube.begin()->erase_cube();
+					myDraw.all_cube.begin()->rotate_cube(5,0 , 0);
+				}
+				else if (starty - endy < 0){
+					myDraw.all_cube.begin()->erase_cube();
+					myDraw.all_cube.begin()->rotate_cube(-5, 0, 0);
+				}
+				glColor3f(1, 0, 0);
+				myDraw.all_cube.begin()->draw_cube();
+			}
+		}
+		break;
+	}
 	case 100:
 	{
 		glClearColor(1.0, 1.0, 1.0, 0.0);
