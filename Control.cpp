@@ -1,6 +1,7 @@
 #include"common.h"
 #include"Control.h"
 #include<math.h>
+#include<fstream>
 int MENU;
 char DRAW_MODE;
 
@@ -92,6 +93,146 @@ void SelectMenu(int value)
 		{
 			B_spline sp;
 			myDraw.all_bspline.push_front(sp);
+		}
+	}
+	else if (value == 27)//保存
+	{
+		ofstream  file("my_picture.txt", ios::out);
+		file << myDraw.all_line.size() << endl;
+		for (list<Line>::iterator it = myDraw.all_line.begin(); it != myDraw.all_line.end(); it++)
+			file << it->start0 << " " << it->end0 << " " << it->start1 << " " << it->end1 << endl;
+		file << myDraw.all_circle.size() << endl;
+		for (list<Circle>::iterator it = myDraw.all_circle.begin(); it != myDraw.all_circle.end(); it++)
+			file << it->start0 << " " << it->end0 << " " << it->start1 << " " << it->end1 << endl;
+		file << myDraw.all_ellipse.size() << endl;
+		for (list<Ellipse>::iterator it = myDraw.all_ellipse.begin(); it != myDraw.all_ellipse.end(); it++)
+			file << it->start << " " << it->end << " " << it->rx << " " << it->ry << endl;
+		file << myDraw.all_polygon.size() << endl;
+		for (list<Polygon>::iterator it = myDraw.all_polygon.begin(); it != myDraw.all_polygon.end(); it++){
+			file << it->polygon_edge.size() << endl;
+			for (list<Line>::iterator it1 = it->polygon_edge.begin(); it1 != it->polygon_edge.end(); it1++)
+				file << it1->start0 << " " << it1->end0 << " " << it1->start1 << " " << it1->end1 << endl;
+		}
+		file << myDraw.all_bezier.size() << endl;
+		for (list<Bezier>::iterator it = myDraw.all_bezier.begin(); it != myDraw.all_bezier.end(); it++){
+			int b_size = it->num;
+			file << b_size<<endl;
+			for (int i = 0; i < b_size; i++){
+				file << it->point[i].x << " " << it->point[i].y << endl;
+			}
+		}
+		file << myDraw.all_bspline.size() << endl;
+		for (list<B_spline>::iterator it = myDraw.all_bspline.begin(); it != myDraw.all_bspline.end(); it++){
+			int b_size = it->num;
+			file << b_size << endl;
+			for (int i = 0; i < b_size; i++){
+				file << it->point[i].x << " " << it->point[i].y << endl;
+			}
+		}
+		file << myDraw.all_cube.size() << endl;
+		for (list<Cube>::iterator it = myDraw.all_cube.begin(); it != myDraw.all_cube.end(); it++){
+			for (int i = 0; i < 8; i++)
+			{
+				file << it->vertex2d[i].x << " " << it->vertex2d[i].y << " " << it->vertex2d[i].z << endl;
+			}
+		}
+
+	}
+	else if (value == 28)//打开
+	{
+		//清空内存中的图元链表
+		myDraw.all_bezier.clear();
+		myDraw.all_bspline.clear();
+		myDraw.all_circle.clear();
+		myDraw.all_cube.clear();
+		myDraw.all_ellipse.clear();
+		myDraw.all_line.clear();
+		myDraw.all_polygon.clear();
+
+		ifstream file("my_picture.txt");
+		int unit_num;
+
+		//直线
+		file >> unit_num;
+		for (int i = 0; i < unit_num; i++)
+		{
+			Line l;
+			file >> l.start0 >> l.end0 >> l.start1 >> l.end1;
+			myDraw.all_line.push_front(l);
+			glColor3f(1, 0, 0);
+			l.bresenham(l.start0, l.end0, l.start1, l.end1);
+		}
+		//圆
+		file >> unit_num;
+		for (int i = 0; i < unit_num; i++)
+		{
+			Circle c;
+			file >> c.start0 >> c.end0 >> c.start1 >> c.end1;
+			myDraw.all_circle.push_front(c);
+			glColor3f(1, 0, 0);
+			c.bresenham_circle(c.start0, c.end0, c.start1, c.end1);
+		}
+		//椭圆
+		file >> unit_num;
+		for (int i = 0; i < unit_num; i++)
+		{
+			Ellipse e;
+			file >> e.start >> e.end >> e.rx >> e.ry;
+			myDraw.all_ellipse.push_front(e);
+			glColor3f(1, 0, 0);
+			e.bresenham_ellipse(e.start, e.end, e.rx, e.ry);
+		}
+		//多边形
+		file >> unit_num;
+		for (int i = 0; i < unit_num; i++)
+		{
+			Polygon p;
+			int l_num;//多边形边数
+			file >> l_num;
+			for (int j = 0; j < l_num; j++){
+				Line l;
+				file >> l.start0 >> l.end0 >> l.start1 >> l.end1;
+				p.polygon_edge.push_front(l);
+				glColor3f(1, 0, 0);
+				l.bresenham(l.start0, l.end0, l.start1, l.end1);
+			}
+			myDraw.all_polygon.push_front(p);
+		}
+		//Bezier曲线
+		file >> unit_num;
+		for (int i = 0; i < unit_num; i++){
+			int ctrl_num;//控制点数
+			file >> ctrl_num;
+			Bezier b;
+			for (int j = 0; j < ctrl_num; j++){
+				file >> b.point[j].x >> b.point[j].y;
+				setPixel(b.point[j].x, b.point[j].y);
+			}
+			b.draw_bezier();
+			myDraw.all_bezier.push_front(b);
+		}
+		//B样条曲线
+		file >> unit_num;
+		for (int i = 0; i < unit_num; i++){
+			int ctrl_num;//控制点数
+			file >> ctrl_num;
+			B_spline b;
+			for (int j = 0; j < ctrl_num; j++){
+				file >> b.point[j].x >> b.point[j].y;
+				setPixel(b.point[j].x, b.point[j].y);
+			} 
+			b.draw_b_spline();
+			myDraw.all_bspline.push_front(b);
+		}
+		//立方体
+		file >> unit_num;
+		for (int i = 0; i < unit_num; i++){
+			Cube c;
+			for (int j = 0; j < 8; j++){
+				file >> c.vertex2d[j].x >> c.vertex2d[j].y >> c.vertex2d[j].z;
+			}
+			c.draw_cube();
+			myDraw.all_cube.push_front(c);
 		}
 	}
 }
@@ -530,6 +671,10 @@ void myDisplay()
 	glutAddMenuEntry("删除", 25);
 	glutAddMenuEntry("变换", 26);
 
+	int file_submenu = glutCreateMenu(SelectMenu);
+	glutAddMenuEntry("保存", 27);
+	glutAddMenuEntry("打开", 28);
+
 	/*set menu*/
 	int menu_id = glutCreateMenu(SelectMenu);
 	glutAddSubMenu("直线", line_submenu);
@@ -540,6 +685,7 @@ void myDisplay()
 	glutAddSubMenu("Bezier曲线", bezier_submenu);
 	glutAddSubMenu("B样条曲线", bspline_submenu);
 	glutAddSubMenu("正六面体", solid_submenu);
+	glutAddSubMenu("菜单", file_submenu);
 	glutAddMenuEntry("Clear screen",100);
 	glutAttachMenu(GLUT_RIGHT_BUTTON);
 

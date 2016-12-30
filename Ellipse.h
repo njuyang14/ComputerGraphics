@@ -8,10 +8,9 @@ using namespace std;
 
 /*直线结构*/
 class Ellipse{
-private:
+public:
 	list<Ellipse_coordinate> ellipse_position;
 	int start, end, rx, ry;
-public:
 	void bresenham_ellipse(int x0, int y0,int a,int b);
 	void erase_ellipse();
 };
